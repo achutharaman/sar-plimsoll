@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# sar-plimsoll
+*.json
+*.docx
+*.txt
+
+# Local project/tooling config, not for the public repo
+CLAUDE.md
+.claude/
+
+# NEVER commit these
+.env
+*.pem
+credentials
+
+# Terraform (keep .terraform.lock.hcl committed for reproducible provider versions)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+
+# Local build/test artifacts
+.last-image
+.hypothesis/
+
+# Dashboard (web/)
+node_modules/
+.firebase/
+# Required config files, excepted from the *.json rule above
+!web/package.json
+!web/package-lock.json
+!web/tsconfig.json
+!web/firebase.json
+PROJECT_SPEC.md

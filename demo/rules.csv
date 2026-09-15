@@ -1,0 +1,33 @@
+id,type,description
+SEC-001,security,Never interpolate raw user input directly into SQL queries — use bound parameters
+SEC-002,security,"Do not hard-code secrets, API keys or passwords in source; load them from a secret manager at runtime"
+SEC-003,security,Avoid eval/exec or dynamic code execution on data that may be user-controlled
+SEC-004,security,Validate and bound the size of every external input before parsing it
+SEC-005,security,"Never log tokens, passwords or full request bodies"
+SEC-006,security,Use constant-time comparison when checking signatures or tokens
+SEC-007,security,Disable TLS certificate verification only in tests — never in production code paths
+COR-001,correctness,"Do not swallow exceptions with a bare except or empty catch block; handle, narrow or re-raise"
+COR-002,correctness,Always check and handle returned errors instead of discarding them
+COR-003,correctness,"Close files, sockets and database connections deterministically (with/try-with-resources/defer)"
+COR-004,correctness,Guard against division by zero and empty collections before computing averages
+COR-005,correctness,Avoid mutable default arguments; they are shared across calls
+COR-006,correctness,Compare floating-point money values with a tolerance or use a decimal type
+PERF-001,performance,Cache repeated database lookups inside the request loop
+PERF-002,performance,Batch database queries instead of issuing one query per item (N+1 queries)
+PERF-003,performance,"Avoid quadratic membership checks on lists in hot loops; use a set or dict"
+PERF-004,performance,Stream large files instead of reading them fully into memory
+PERF-005,performance,Reuse HTTP clients and connection pools rather than creating one per request
+PERF-006,performance,Do not start an unbounded goroutine or thread per incoming item; use a worker pool
+ARCH-001,architecture,"Keep I/O at the edges: business rules should not construct database or HTTP clients directly"
+ARCH-002,architecture,Depend on interfaces for external services so they can be substituted in tests
+ARCH-003,architecture,Avoid global mutable state shared across requests
+ARCH-004,architecture,A function should do one thing; split functions that validate, persist and notify at once
+ARCH-005,architecture,Propagate cancellation and timeouts (context/deadline) through every outbound call
+MAINT-001,maintainability,Replace magic numbers and strings with named constants
+MAINT-002,maintainability,Functions longer than about 50 lines usually hide several responsibilities
+MAINT-003,maintainability,Remove commented-out code; version control keeps history
+MAINT-004,maintainability,Use precise types instead of any/Object/interface{} at module boundaries
+MAINT-005,maintainability,Resolve TODO and FIXME markers or track them in the issue tracker
+FMT-001,formatting,Avoid single-character variable names — they hurt readability
+FMT-002,formatting,Use consistent naming conventions for the language (snake_case / camelCase)
+FMT-003,formatting,Keep lines under 100–120 characters

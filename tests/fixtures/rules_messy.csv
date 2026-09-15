@@ -1,0 +1,13 @@
+id,type,description
+1, formatting, Avoid single-character variable names — they hurt readability
+2, performance, Cache repeated database lookups inside the request loop
+3, security, Never interpolate raw user input directly into SQL queries
+
+4,"security","Don't store secrets, tokens or passwords in source code"
+5, perf, Prefer batch APIs over per-item calls, especially over the network
+6, witchcraft, Unknown types are kept — naïve café résumé 日本語
+3, security, Duplicate id should be rejected
+, correctness, Missing id should be rejected
+7, correctness,
+8
+9, correctness, "Swallowing exceptions with a bare except hides real failures"

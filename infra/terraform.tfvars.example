@@ -1,0 +1,7 @@
+project_id = "your-project-id"
+region     = "us-central1"
+# admin_uids           = ["firebase-uid-of-first-admin"]
+# firebase_web_api_key = "browser API key created by Firebase"
+# api_min_instances    = 1          # keep the API warm for demos (billed while idle)
+# allow_public_api     = false      # only if an org policy forbids public services (the dashboard then cannot reach the API)
+# billing_account      = "XXXXXX-XXXXXX-XXXXXX"
