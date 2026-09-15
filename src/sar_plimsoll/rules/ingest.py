@@ -49,8 +49,11 @@ class IngestReport:
     duration_ms: int
 
     def to_dict(self) -> dict:
+        from sar_plimsoll.rules.identity import rules_label
+
         data = asdict(self)
         data["rejected_count"] = len(self.rejected)
+        data["corpus_label"] = rules_label(self.corpus_version)
         return data
 
 
@@ -171,5 +174,10 @@ def _rss_mib() -> float | None:
 
 
 def current_corpus_version(store: ReviewStore) -> str:
+    return current_corpus(store)[0]
+
+
+def current_corpus(store: ReviewStore) -> tuple[str, int]:
+    """(version, rule_count) of the rules corpus reviews are grounded in right now."""
     meta = store.get_meta(CORPUS_META)
-    return meta["version"] if meta else UNINITIALISED_CORPUS
+    return (meta["version"], int(meta.get("rule_count", 0))) if meta else (UNINITIALISED_CORPUS, 0)

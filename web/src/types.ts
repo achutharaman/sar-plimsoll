@@ -55,7 +55,11 @@ export interface Review {
   created_at: string;
   completed_at: string | null;
   rubric_version: string;
+  prompt_version: string;
   rules_corpus_version: string;
+  rules_corpus_size: number | null;
+  rules_label: string;
+  rules_short: string | null;
   models: { triage: string; escalation: string };
   score: number | null;
   result: ReviewResult | null;
@@ -73,7 +77,16 @@ export interface FileHistory {
   best_score: number;
   delta: number;
   last_reviewed_at: string;
-  points: { review_id: string; created_at: string; score: number; cache_hit: boolean }[];
+  rule_sets: number;
+  points: {
+    review_id: string;
+    created_at: string;
+    score: number;
+    cache_hit: boolean;
+    rules_corpus_version: string | null;
+    rules_label: string;
+    rules_short: string | null;
+  }[];
 }
 
 export interface History {

@@ -14,7 +14,7 @@ from sar_plimsoll.llm.ledger import CostLedger
 from sar_plimsoll.review.cache_key import compute_cache_key
 from sar_plimsoll.review.languages import validate_submission
 from sar_plimsoll.review.prompts import PROMPT_VERSION
-from sar_plimsoll.rules.ingest import current_corpus_version
+from sar_plimsoll.rules.ingest import current_corpus
 from sar_plimsoll.scoring.rubric import Rubric
 from sar_plimsoll.storage.interfaces import BlobStore, ReviewStore, TaskQueue
 from sar_plimsoll.worker.jobs import ReviewJobRunner, cost_record
@@ -77,7 +77,7 @@ class SubmissionService:
             max_bytes=self._s.max_file_bytes,
             max_lines=self._s.max_file_lines,
         )
-        corpus = current_corpus_version(self._store)
+        corpus, corpus_size = current_corpus(self._store)
         cache_key = compute_cache_key(
             content_sha256=source.sha256,
             language=source.language,
@@ -102,6 +102,7 @@ class SubmissionService:
             "rubric_version": self._rubric.version,
             "prompt_version": PROMPT_VERSION,
             "rules_corpus_version": corpus,
+            "rules_corpus_size": corpus_size,
             "models": {"triage": self._s.triage_model, "escalation": self._s.escalation_model},
             "attempts": 0,
             "generation": 0,

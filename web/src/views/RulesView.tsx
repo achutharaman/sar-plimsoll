@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { ApiError, api, poll } from "../api";
-import { Button, Card, Notice } from "../components/ui";
+import { Button, Card, Notice, RulesBadge } from "../components/ui";
 import type { IngestJob } from "../types";
 
 export function RulesView() {
-  const [corpus, setCorpus] = useState<{ version: string; rule_count: number } | null>(null);
+  const [corpus, setCorpus] = useState<{ version: string; rule_count: number; label: string; short: string | null } | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [job, setJob] = useState<IngestJob | null>(null);
   const [busy, setBusy] = useState(false);
@@ -45,9 +45,10 @@ export function RulesView() {
           {error && <Notice>{error}</Notice>}
         </form>
         {corpus && (
-          <p className="mt-4 text-sm text-ink-2">
-            Corpus <span className="font-mono text-ink">{corpus.version}</span> · {corpus.rule_count.toLocaleString()} rules
-          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-sm text-ink-2">
+            Current rule set
+            <RulesBadge label={corpus.label} short={corpus.short} size={corpus.rule_count} version={corpus.version} />
+          </div>
         )}
       </Card>
 
@@ -66,6 +67,10 @@ export function RulesView() {
           )}
           {report && (
             <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+              <div className="col-span-2">
+                <dt className="text-xs text-muted">rule set after ingest</dt>
+                <dd className="m-0 text-ink">{String(report.corpus_label ?? "—")} <span className="font-mono text-xs text-muted">{String(report.corpus_version ?? "").slice(0, 9)}</span></dd>
+              </div>
               {(["accepted", "inserted", "updated", "unchanged", "rejected_count", "embedded", "corpus_size"] as const).map((k) => (
                 <div key={k}>
                   <dt className="text-xs text-muted">{k.replace("_", " ")}</dt>

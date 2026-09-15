@@ -32,6 +32,7 @@ from sar_plimsoll.api.submission import (
 from sar_plimsoll.config import get_settings
 from sar_plimsoll.logging_setup import configure_logging
 from sar_plimsoll.review.languages import SUPPORTED_LANGUAGES, SubmissionError
+from sar_plimsoll.rules.identity import rules_label, short_version
 from sar_plimsoll.rules.ingest import CORPUS_META
 from sar_plimsoll.rules.ingest_jobs import IngestLaunchFailed
 from sar_plimsoll.storage.interfaces import TransientStorageError
@@ -52,6 +53,7 @@ _PUBLIC_FIELDS = (
     "rubric_version",
     "prompt_version",
     "rules_corpus_version",
+    "rules_corpus_size",
     "models",
     "score",
     "result",
@@ -100,6 +102,8 @@ def create_app(container: Container | None = None) -> FastAPI:
     def present(review: dict[str, Any]) -> dict[str, Any]:
         body = {k: review.get(k) for k in _PUBLIC_FIELDS}
         body["stalled"] = is_stalled(review, settings.review_stall_minutes)
+        body["rules_label"] = rules_label(review.get("rules_corpus_version"))
+        body["rules_short"] = short_version(review.get("rules_corpus_version"))
         return body
 
     # ------------------------------------------------------------------ failure handling
@@ -275,7 +279,11 @@ def create_app(container: Container | None = None) -> FastAPI:
 
     @app.get("/admin/rules/corpus")
     def corpus(_: Annotated[User, Depends(admin_user)]) -> dict:
-        return container.store.get_meta(CORPUS_META) or {"version": "empty", "rule_count": 0}
+        meta = container.store.get_meta(CORPUS_META) or {"version": "empty", "rule_count": 0}
+        return meta | {
+            "label": rules_label(meta["version"]),
+            "short": short_version(meta["version"]),
+        }
 
     return app
 

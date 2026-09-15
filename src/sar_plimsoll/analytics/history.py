@@ -8,6 +8,8 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Any
 
+from sar_plimsoll.rules.identity import rules_label, short_version
+
 
 def _done(summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [s for s in summaries if s.get("status") == "done" and s.get("score") is not None]
@@ -38,9 +40,14 @@ def file_histories(summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
                         "created_at": s["created_at"],
                         "score": s["score"],
                         "cache_hit": bool((s.get("cost") or {}).get("cache_hit")),
+                        "rules_corpus_version": s.get("rules_corpus_version"),
+                        "rules_label": rules_label(s.get("rules_corpus_version")),
+                        "rules_short": short_version(s.get("rules_corpus_version")),
                     }
                     for s in items
                 ],
+                # Scores from different rule sets are not directly comparable; the UI marks changes.
+                "rule_sets": len({s.get("rules_corpus_version") for s in items}),
             }
         )
     return sorted(files, key=lambda f: f["last_reviewed_at"], reverse=True)

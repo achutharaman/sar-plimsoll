@@ -89,6 +89,7 @@ class FirestoreReviewStore:
                     "created_at",
                     "score",
                     "finding_counts",
+                    "rules_corpus_version",
                     "cost.cost_usd",
                     "cost.cache_hit",
                     "cost.escalated",
