@@ -155,3 +155,30 @@ def test_me_reports_admin_from_the_server(client):
     }
     assert client.get("/v1/me", headers=ALICE).json()["admin"] is False
     assert client.get("/v1/me").status_code == 401
+
+
+def test_reviews_and_history_carry_a_readable_rules_identity(client):
+    from sar_plimsoll.rules.identity import rules_label
+
+    first = submit(client, VULNERABLE_PY).json()
+    assert first["rules_label"] == "no rules" and first["rules_short"] is None
+    assert first["rules_corpus_size"] == 0
+
+    client.post("/admin/rules:ingest", files={"file": ("r.csv", SPEC_RULES)}, headers=ADMIN)
+    corpus = client.get("/admin/rules/corpus", headers=ADMIN).json()
+    assert (
+        corpus["label"] == rules_label(corpus["version"])
+        and corpus["short"] == corpus["version"][:9]
+    )
+
+    second = submit(client, VULNERABLE_PY).json()  # new corpus version → fresh review, not cached
+    review = client.get(f"/v1/reviews/{second['id']}", headers=ALICE).json()
+    assert review["rules_label"] == corpus["label"] and review["rules_corpus_size"] == 3
+
+    app = next(
+        f
+        for f in client.get("/v1/history", headers=ALICE).json()["files"]
+        if f["filename"] == "app.py"
+    )
+    assert app["rule_sets"] == 2
+    assert [p["rules_label"] for p in app["points"]] == ["no rules", corpus["label"]]

@@ -123,3 +123,34 @@ export function Segmented<T extends string | number>({ value, options, onChange,
     </div>
   );
 }
+
+/** The Plimsoll mark at text size: identifies a rule set wherever it appears. */
+export function RulesMark({ size = 12 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden className="shrink-0">
+      <circle cx="16" cy="16" r="10" fill="none" stroke="var(--accent)" strokeWidth="4" />
+      <path d="M2 16h28" stroke="var(--accent)" strokeWidth="4" />
+    </svg>
+  );
+}
+
+/** Readable identity of the rules corpus a review was scored with: name, size, short hash. */
+export function RulesBadge({ label, short, size, version }: {
+  label: string;
+  short: string | null;
+  size?: number | null;
+  version?: string | null;
+}) {
+  const detail = version ? `Rules version ${version}${size != null ? ` · ${size} rules` : ""}` : "Reviewed before any rules were ingested";
+  return (
+    <span
+      title={detail}
+      className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-1 text-xs text-ink"
+    >
+      <RulesMark />
+      <span className="font-semibold">{label}</span>
+      {size != null && size > 0 && <span className="text-ink-2">· {size.toLocaleString()} rules</span>}
+      {short && <span className="font-mono text-[11px] text-muted">{short}</span>}
+    </span>
+  );
+}

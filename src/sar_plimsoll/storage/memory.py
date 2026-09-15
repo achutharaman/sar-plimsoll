@@ -89,7 +89,16 @@ class MemoryReviewStore:
         return sorted(mine, key=lambda r: r["created_at"], reverse=True)[:limit]
 
     def list_review_summaries(self, uid: str, limit: int) -> list[dict[str, Any]]:
-        fields = ("id", "filename", "language", "status", "created_at", "score", "finding_counts")
+        fields = (
+            "id",
+            "filename",
+            "language",
+            "status",
+            "created_at",
+            "score",
+            "finding_counts",
+            "rules_corpus_version",
+        )
         return [
             {k: r.get(k) for k in fields}
             | {

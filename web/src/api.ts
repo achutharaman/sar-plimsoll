@@ -62,7 +62,8 @@ export const api = {
   },
   ingestJob: (id: string) =>
     request<IngestJob>(`/admin/rules/ingest-jobs/${encodeURIComponent(id)}`).then((r) => r.body),
-  corpus: () => request<{ version: string; rule_count: number }>("/admin/rules/corpus").then((r) => r.body),
+  corpus: () =>
+    request<{ version: string; rule_count: number; label: string; short: string | null }>("/admin/rules/corpus").then((r) => r.body),
 };
 
 /** Poll until `done(value)` or the attempt budget runs out; delays grow gently. */

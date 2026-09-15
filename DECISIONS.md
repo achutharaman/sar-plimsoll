@@ -3,6 +3,22 @@
 Deviations from `PROJECT_SPEC.md` and design choices the spec leaves open, with reasoning.
 Newest first.
 
+## 2026-09-15 — Readable identity for rule sets
+
+**Problem:** scores in a file's history can change because the rules changed, not the code, and the
+dashboard showed only the rubric version — the rules version (`rc_…` hash) was invisible.
+**Decision:** every rules corpus version gets a deterministic two-word name derived from its hash
+(`rules/identity.py`, nautical vocabulary, 4,096 combinations), shown with its rule count and a short
+hash. Reviews store the corpus size seen at submission. The review page shows a "Scored with" strip
+(rules name · rule count · short hash, rubric version, prompt version); History marks the first rule
+flags files scored under more than one rule set (a "N rule sets" badge; each score chip names its rule
+set on hover — inline "rules changed" markers were tried and removed as clutter, since opening a review
+shows its rule set); the Rules tab and ingest reports show the name.
+**Why a derived name, not a stored one:** the same rules always get the same name in every
+environment with no extra storage or coordination — the local offline run and the deployed system
+both named the same 39-rule corpus "snowy-bearing". The full version string remains the source of
+truth and is shown on hover.
+
 ## 2026-09-14 — System prompt p2
 
 **Change:** the review system prompt was rewritten (`PROMPT_VERSION` p1 → p2) from an owner-supplied

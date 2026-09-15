@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ApiError, api, poll } from "../api";
 import { useAuth } from "../auth";
 import { BarList } from "../components/charts";
-import { Button, Card, Notice, SeverityBadge, Spinner } from "../components/ui";
+import { Button, Card, Notice, RulesBadge, SeverityBadge, Spinner } from "../components/ui";
 import { scoreBand, seconds, usd, when } from "../format";
 import type { Dimension, Review, Severity } from "../types";
 
@@ -174,6 +174,12 @@ function ReviewResultPanel({ review, onRetry, busy }: { review: Review; onRetry:
             <Meta k="Model" v={review.cost.cache_hit ? "cached result" : review.cost.escalated ? "escalated to Pro" : "Flash only"} />
           </dl>
         )}
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-line pt-3 text-xs">
+          <span className="text-muted">Scored with</span>
+          <RulesBadge label={review.rules_label} short={review.rules_short} size={review.rules_corpus_size} version={review.rules_corpus_version} />
+          <span className="rounded-md border border-line px-2 py-1 text-ink-2">rubric <span className="font-mono text-ink">{review.rubric_version}</span></span>
+          <span className="rounded-md border border-line px-2 py-1 text-ink-2">prompt <span className="font-mono text-ink">{review.prompt_version}</span></span>
+        </div>
       </Card>
 
       <Card title="Score by dimension" subtitle="Each dimension scored on the same 1–10 curve">

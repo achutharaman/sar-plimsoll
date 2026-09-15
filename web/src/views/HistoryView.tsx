@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ApiError, api } from "../api";
 import { LineChart, Sparkline } from "../components/charts";
-import { Card, Empty, Notice, Spinner } from "../components/ui";
+import { Card, Empty, Notice, RulesMark, Spinner } from "../components/ui";
 import { day, when } from "../format";
 import type { History } from "../types";
 
@@ -36,7 +36,14 @@ export function HistoryView({ onOpen }: { onOpen: (reviewId: string) => void }) 
               <div className="flex flex-wrap items-center gap-4">
                 <div className="min-w-40 flex-1">
                   <div className="font-mono text-sm text-ink">{f.filename}</div>
-                  <div className="text-xs text-ink-2">{f.language} · {f.reviews} review{f.reviews === 1 ? "" : "s"} · last {when(f.last_reviewed_at)}</div>
+                  <div className="text-xs text-ink-2">
+                    {f.language} · {f.reviews} review{f.reviews === 1 ? "" : "s"} · last {when(f.last_reviewed_at)}
+                    {f.rule_sets > 1 && (
+                      <span className="ml-2 inline-flex items-center gap-1 rounded-md border border-line px-1.5 py-0.5 text-ink" title="Scores in this history come from different rule sets, so part of the change may be due to the rules rather than the code">
+                        <RulesMark size={10} /> {f.rule_sets} rule sets
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <Sparkline values={f.points.map((p) => p.score)} label={`${f.filename} scores: ${f.points.map((p) => p.score).join(", ")}`} />
                 <div className="w-28 text-right">
@@ -51,6 +58,7 @@ export function HistoryView({ onOpen }: { onOpen: (reviewId: string) => void }) 
                   <button
                     key={p.review_id}
                     onClick={() => onOpen(p.review_id)}
+                    title={`Scored with rules ${p.rules_label}${p.rules_short ? ` (${p.rules_short})` : ""}`}
                     className="rounded-md border border-line px-2 py-0.5 text-xs text-ink-2 hover:bg-surface-2 hover:text-ink"
                   >
                     {p.score.toFixed(1)} · {when(p.created_at)}{p.cache_hit ? " · cached" : ""}
